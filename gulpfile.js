@@ -11,7 +11,7 @@ var paths = {
     }
 }
 
-gulp.task('compile-sass', function (){
+gulp.task('prefix', function (){
     return gulp.src(paths.styles.files)
         .pipe(sourcemaps.init())
         .pipe(sass())
@@ -20,5 +20,18 @@ gulp.task('compile-sass', function (){
             includeContent: false,
             sourceRoot: '../src/scss'
         }))
-        .pipe(gulp.dest(paths.styles.dest));
+        .pipe(gulp.dest(paths.styles.dest + '/prefix'));
 });
+
+gulp.task('noPrefix', function (){
+    return gulp.src(paths.styles.files)
+        .pipe(sourcemaps.init())
+        .pipe(sass())
+        .pipe(sourcemaps.write('.', {
+            includeContent: false,
+            sourceRoot: '../src/scss'
+        }))
+        .pipe(gulp.dest(paths.styles.dest + '/noPrefix'));
+});
+
+gulp.task('default', ['noPrefix', 'prefix']);
