@@ -2,6 +2,9 @@ var gulp = require('gulp');
 var sass = require('gulp-sass');
 var sourcemaps = require('gulp-sourcemaps');
 var prefix = require('gulp-autoprefixer');
+// POST CSS
+var postcss = require('gulp-postcss');
+var cssnext = require('postcss-cssnext');
 
 var paths = {
     styles: {
@@ -50,4 +53,20 @@ gulp.task('workAround', function (){
         .pipe(gulp.dest(paths.styles.dest + '/workAround'));
 });
 
-gulp.task('default', ['noPrefix', 'prefix', 'workAround']);
+gulp.task('postCSS', function (){
+    var processors = [
+        cssnext()
+    ];
+
+    return gulp.src(paths.styles.files)
+        .pipe(sourcemaps.init())
+        .pipe(sass())
+        .pipe(postcss(processors))
+        .pipe(sourcemaps.write('.', {
+            includeContent: false,
+            sourceRoot: '../../../src/scss'
+        }))
+        .pipe(gulp.dest(paths.styles.dest + '/postCSS'));
+});
+
+gulp.task('default', ['noPrefix', 'prefix', 'workAround', 'postCSS']);
